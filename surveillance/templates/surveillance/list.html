@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Surveillance Records{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-clipboard-data"></i> Surveillance Records</h2>
+    <a href="{% url 'surveillance-create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Add Record
+    </a>
+</div>
+
+{% if object_list %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Date</th>
+                <th>Farm</th>
+                <th>Pest/Disease</th>
+                <th>Plants Checked</th>
+                <th>Infected</th>
+                <th>%</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in object_list %}
+            <tr>
+                <td>{{ record.date }}</td>
+                <td><a href="{% url 'farm-detail' record.farm.pk %}">{{ record.farm.name }}</a></td>
+                <td><a href="{% url 'pest-detail' record.pest_disease.pk %}">{{ record.pest_disease.name }}</a></td>
+                <td>{{ record.plants_checked }}</td>
+                <td>{{ record.infected_plants }}</td>
+                <td>{{ record.infection_percentage }}%</td>
+                <td>
+                    <a href="{% url 'surveillance-detail' record.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i> View
+                    </a>
+                    <a href="{% url 'surveillance-update' record.pk %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> No surveillance records found. 
+    <a href="{% url 'surveillance-create' %}" class="alert-link">Add your first record</a>.
+</div>
+{% endif %}
+{% endblock %}

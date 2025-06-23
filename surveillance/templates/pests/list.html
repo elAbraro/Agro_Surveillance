@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Pests & Diseases{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-bug"></i> Pests & Diseases</h2>
+    <a href="{% url 'pest-create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Add Pest/Disease
+    </a>
+</div>
+
+{% if object_list %}
+<div class="row">
+    {% for pest in object_list %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-{% if pest.affected_plant_part == 'fruit' %}danger{% elif pest.affected_plant_part == 'leaf' %}success{% else %}warning{% endif %} text-white">
+                <h5 class="mb-0">{{ pest.name }}</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-muted">{{ pest.scientific_name }}</h6>
+                <p><strong>Affects:</strong> <span class="badge bg-secondary">{{ pest.get_affected_plant_part_display }}</span></p>
+                <p>{{ pest.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'pest-detail' pest.pk %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye"></i> View Details
+                </a>
+                <a href="{% url 'pest-update' pest.pk %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> No pests or diseases have been added yet. 
+    <a href="{% url 'pest-create' %}" class="alert-link">Add the first one</a>.
+</div>
+{% endif %}
+{% endblock %}

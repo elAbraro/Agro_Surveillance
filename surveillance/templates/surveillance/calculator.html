@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Surveillance Calculator - {{ farm.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-calculator"></i> Surveillance Calculator - {{ farm.name }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5><i class="bi bi-info-circle"></i> Recommended Surveillance</h5>
+                    <p>Based on your farm size ({{ farm.area_hectares }} hectares) and total plants ({{ farm.total_plants }}), 
+                    we recommend checking approximately <strong>{{ recommended_plants }} plants</strong> during each surveillance round.</p>
+                    <p>This ensures adequate coverage to detect potential pests or diseases.</p>
+                </div>
+                
+                <h5 class="mt-4">Record New Surveillance</h5>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Save Record
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

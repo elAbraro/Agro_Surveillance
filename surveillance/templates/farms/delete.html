@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Farm{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4><i class="bi bi-exclamation-triangle"></i> Confirm Deletion</h4>
+            </div>
+            <div class="card-body">
+                <p>Are you sure you want to delete the farm <strong>"{{ object.name }}"</strong>?</p>
+                <p class="text-danger"><i class="bi bi-exclamation-circle"></i> This action cannot be undone. All associated surveillance records will also be deleted.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-danger me-md-2">
+                            <i class="bi bi-trash"></i> Confirm Delete
+                        </button>
+                        <a href="{% url 'farm-detail' object.pk %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

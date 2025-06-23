@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ object.name }} Details{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-{% if object.affected_plant_part == 'fruit' %}danger{% elif object.affected_plant_part == 'leaf' %}success{% else %}warning{% endif %} text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4><i class="bi bi-bug"></i> {{ object.name }}</h4>
+            <div>
+                <a href="{% url 'pest-update' object.pk %}" class="btn btn-sm btn-light me-2">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <a href="{% url 'pest-delete' object.pk %}" class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <h6>Scientific Name</h6>
+                    <p>{{ object.scientific_name }}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Affected Plant Part</h6>
+                    <span class="badge bg-secondary">{{ object.get_affected_plant_part_display }}</span>
+                </div>
+                {% if object.image %}
+                <div class="mb-3">
+                    <img src="{{ object.image.url }}" alt="{{ object.name }}" class="img-fluid rounded">
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <h6>Description</h6>
+                    <p>{{ object.description }}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Symptoms</h6>
+                    <p>{{ object.symptoms }}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Treatment</h6>
+                    <p>{{ object.treatment }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Added on {{ object.created_at|date:"d M Y" }}</small>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <h5><i class="bi bi-clipboard-data"></i> Surveillance Records</h5>
+    </div>
+    <div class="card-body">
+        {% if object.surveillancerecord_set.all %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Farm</th>
+                        <th>Plants Checked</th>
+                        <th>Infected</th>
+                        <th>%</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in object.surveillancerecord_set.all|slice:":5" %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td><a href="{% url 'farm-detail' record.farm.pk %}">{{ record.farm.name }}</a></td>
+                        <td>{{ record.plants_checked }}</td>
+                        <td>{{ record.infected_plants }}</td>
+                        <td>{{ record.infection_percentage }}%</td>
+                        <td>
+                            <a href="{% url 'surveillance-detail' record.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end mt-2">
+            <a href="{% url 'surveillance-list' %}?pest={{ object.pk }}" class="btn btn-sm btn-primary">
+                View All Records
+            </a>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> No surveillance records found for this pest/disease.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

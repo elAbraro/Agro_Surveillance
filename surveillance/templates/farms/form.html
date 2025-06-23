@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Farm{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-{% if object %}warning{% else %}success{% endif %} text-white">
+                <h4><i class="bi bi-map"></i> {% if object %}Edit{% else %}Add New{% endif %} Farm</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button type="submit" class="btn btn-{% if object %}warning{% else %}success{% endif %} me-md-2">
+                            <i class="bi bi-save"></i> {% if object %}Update{% else %}Save{% endif %}
+                        </button>
+                        <a href="{% if object %}{% url 'farm-detail' object.pk %}{% else %}{% url 'farm-list' %}{% endif %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
